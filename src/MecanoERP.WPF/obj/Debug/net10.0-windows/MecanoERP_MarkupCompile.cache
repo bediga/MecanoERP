@@ -1,5 +1,5 @@
 ﻿MecanoERP
-1.0.0.0
+
 
 winexe
 C#
@@ -12,9 +12,9 @@ TRACE;DEBUG;NET;NET10_0;NETCOREAPP;WINDOWS;WINDOWS7_0;NET5_0_OR_GREATER;NET6_0_O
 C:\MecanoERP\src\MecanoERP.WPF\App.xaml
 36-187096007
 
-29-266898608
+27-332206541
 244-613281500
 MainWindow.xaml;Styles\Themes.xaml;Views\AchatsView.xaml;Views\AuditView.xaml;Views\AvoirsView.xaml;Views\BalanceVerificationView.xaml;Views\BanqueView.xaml;Views\CheckInView.xaml;Views\ClientsView.xaml;Views\CloturePeriodeView.xaml;Views\ComptabiliteView.xaml;Views\ConfigTaxesView.xaml;Views\DashboardView.xaml;Views\DevisView.xaml;Views\EmployesView.xaml;Views\EtatsFinanciersView.xaml;Views\FacturationView.xaml;Views\FacturesFournisseursView.xaml;Views\FournisseursView.xaml;Views\GarantiesView.xaml;Views\GestionAPView.xaml;Views\GestionARView.xaml;Views\GrandLivreView.xaml;Views\InventaireView.xaml;Views\JournauxView.xaml;Views\LoginWindow.xaml;Views\MainWindow.xaml;Views\OrdresTravailView.xaml;Views\ParametresView.xaml;Views\PlanComptableView.xaml;Views\PointageView.xaml;Views\RapportsComptablesView.xaml;Views\RendezVousView.xaml;Views\TresorerieView.xaml;Views\UtilisateursView.xaml;Views\VehiculesView.xaml;
 
-True
+False
 

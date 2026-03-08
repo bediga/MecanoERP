@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MecanoERP.Core")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a3f4e1ea8841174574fb7d361330078b4f9b7484")]
 [assembly: System.Reflection.AssemblyProductAttribute("MecanoERP.Core")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MecanoERP.Core")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
