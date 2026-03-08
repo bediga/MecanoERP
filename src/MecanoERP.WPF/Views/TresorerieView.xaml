@@ -1,0 +1,215 @@
+<UserControl x:Class="MecanoERP.WPF.Views.TresorerieView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="#F0F2F5">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Titre -->
+        <Border Grid.Row="0" Background="White" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="20,10">
+            <StackPanel Orientation="Horizontal">
+                <Border Width="4" Height="22" Background="#107E3E" CornerRadius="2" Margin="0,0,10,0"/>
+                <TextBlock Text="🏦 Trésorerie &amp; Banque" Style="{StaticResource PageTitle}"/>
+                <ProgressBar IsIndeterminate="True" Height="3" Width="60" Margin="16,0,0,0"
+                             VerticalAlignment="Center" Foreground="#107E3E" Background="Transparent"
+                             BorderThickness="0"
+                             Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibility}}"/>
+            </StackPanel>
+        </Border>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="200"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Panneau gauche — Comptes bancaires -->
+            <Border Grid.Column="0" Background="White" BorderBrush="#E0E0E0" BorderThickness="0,0,1,0">
+                <StackPanel>
+                    <Border Background="#F7F9FC" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="12,8">
+                        <TextBlock Text="COMPTES" FontFamily="Segoe UI Semibold" FontSize="11" Foreground="#666"/>
+                    </Border>
+                    <ListBox ItemsSource="{Binding Comptes}"
+                             SelectedItem="{Binding CompteSelectionne}"
+                             BorderThickness="0" Background="Transparent">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Margin="4,6">
+                                    <TextBlock Text="{Binding Nom}" FontFamily="Segoe UI Semibold" FontSize="12"/>
+                                    <TextBlock Text="{Binding SoldeCourant, StringFormat='{}{0:N2} $'}"
+                                               FontSize="12" Foreground="#107E3E"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </StackPanel>
+            </Border>
+
+            <!-- Zone principale -->
+            <TabControl Grid.Column="1" Background="Transparent" BorderThickness="0">
+
+                <!-- ── Rapprochement ── -->
+                <TabItem Header="⚖ Rapprochement">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- Contrôles -->
+                        <Border Grid.Row="0" Background="#FAFAFA" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="12,8">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Du :" VerticalAlignment="Center" Margin="0,0,6,0" FontSize="12" Foreground="#555"/>
+                                <DatePicker SelectedDate="{Binding DateDebut}" Height="28" Width="120" Margin="0,0,8,0"/>
+                                <TextBlock Text="Au :" VerticalAlignment="Center" Margin="0,0,6,0" FontSize="12" Foreground="#555"/>
+                                <DatePicker SelectedDate="{Binding DateFin}"   Height="28" Width="120" Margin="0,0,12,0"/>
+                                <Button Content="🔄 Charger" Command="{Binding ChargerCompteCommand}"
+                                        Style="{StaticResource ToolBarBtn}" Height="28" Margin="0,0,8,0"/>
+                                <Button Content="🤖 Auto-rapprocher" Command="{Binding AutoRapprocherCommand}"
+                                        Style="{StaticResource ToolBarBtn}" Height="28"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Barre de soldes -->
+                        <Border Grid.Row="1" Background="White" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="16,10">
+                            <StackPanel Orientation="Horizontal">
+                                <Border Background="#EFF6FF" Padding="10,6" CornerRadius="3" Margin="0,0,12,0">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="Solde livres : " FontSize="12" Foreground="#555"/>
+                                        <TextBlock Text="{Binding SoldeRapproché.SoldeLivres, StringFormat='{}{0:N2} $'}"
+                                                   FontFamily="Segoe UI Semibold" Foreground="#0070F2" FontSize="12"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Background="#F0FFF4" Padding="10,6" CornerRadius="3" Margin="0,0,12,0">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="Solde banque : " FontSize="12" Foreground="#555"/>
+                                        <TextBlock Text="{Binding SoldeRapproché.SoldeBanque, StringFormat='{}{0:N2} $'}"
+                                                   FontFamily="Segoe UI Semibold" Foreground="#107E3E" FontSize="12"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Background="#1C1C1C" Padding="10,6" CornerRadius="3" Margin="0,0,12,0">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="Écart : " FontSize="12" Foreground="#AAA"/>
+                                        <TextBlock Text="{Binding SoldeRapproché.Ecart, StringFormat='{}{0:N2} $'}"
+                                                   FontFamily="Segoe UI Semibold" Foreground="#FFD700" FontSize="12"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Background="#F5F5F5" Padding="10,6" CornerRadius="3">
+                                    <TextBlock Text="{Binding SoldeRapproché.NbNonRapproches, StringFormat='{}{0} transaction(s) non-rapprochée(s)'}"
+                                               FontSize="12" Foreground="#666"/>
+                                </Border>
+                                <TextBlock Text="{Binding Message}" FontSize="12" Foreground="#107E3E"
+                                           VerticalAlignment="Center" Margin="16,0,0,0"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Transactions -->
+                        <DataGrid Grid.Row="2" ItemsSource="{Binding Transactions}"
+                                  IsReadOnly="True" AutoGenerateColumns="False"
+                                  BorderThickness="0" GridLinesVisibility="Horizontal"
+                                  AlternatingRowBackground="#F7F9FC" FontSize="12">
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding EstRapproche}" Value="True">
+                                            <Setter Property="Foreground" Value="#AAA"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.RowStyle>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Date"        Binding="{Binding Date, StringFormat='dd/MM/yyyy'}" Width="90"/>
+                                <DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="*"/>
+                                <DataGridTextColumn Header="Type"        Binding="{Binding TypeTx}"     Width="80"/>
+                                <DataGridTextColumn Header="Montant $"   Binding="{Binding Montant, StringFormat='{}{0:N2}'}" Width="110"/>
+                                <DataGridCheckBoxColumn Header="✓ Rappr." Binding="{Binding EstRapproche}" Width="80" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+                </TabItem>
+
+                <!-- ── Prévisions ── -->
+                <TabItem Header="🔮 Prévisions trésorerie">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <!-- Résumé flux 60j -->
+                        <Border Grid.Row="0" Background="White" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="16,10">
+                            <StackPanel Orientation="Horizontal">
+                                <Border Background="#F0FFF4" Padding="10,6" CornerRadius="3" Margin="0,0,12,0">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="Encaissements prévus : " FontSize="12"/>
+                                        <TextBlock Text="{Binding TotalEncaissementsPrevu, StringFormat='{}{0:N2} $'}"
+                                                   FontFamily="Segoe UI Semibold" Foreground="#107E3E" FontSize="12"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Background="#FFF0F0" Padding="10,6" CornerRadius="3" Margin="0,0,12,0">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="Décaissements prévus : " FontSize="12"/>
+                                        <TextBlock Text="{Binding TotalDecaissementsPrevu, StringFormat='{}{0:N2} $'}"
+                                                   FontFamily="Segoe UI Semibold" Foreground="#BB0000" FontSize="12"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Background="#1C1C1C" Padding="10,6" CornerRadius="3">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="Flux net 60j : " FontSize="12" Foreground="#AAA"/>
+                                        <TextBlock Text="{Binding FluxNetPrevu, StringFormat='{}{0:N2} $'}"
+                                                   FontFamily="Segoe UI Semibold" Foreground="#FFD700" FontSize="12"/>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                        </Border>
+                        <!-- Grille prévisions -->
+                        <DataGrid Grid.Row="1" ItemsSource="{Binding Previsions}"
+                                  IsReadOnly="True" AutoGenerateColumns="False"
+                                  BorderThickness="0" GridLinesVisibility="Horizontal"
+                                  AlternatingRowBackground="#F7F9FC" FontSize="12">
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Type}" Value="Decaissement">
+                                            <Setter Property="Background" Value="#FFF8F0"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.RowStyle>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Date"    Binding="{Binding Date, StringFormat='dd/MM/yyyy'}" Width="90"/>
+                                <DataGridTextColumn Header="Type"    Binding="{Binding Type}"    Width="110"/>
+                                <DataGridTextColumn Header="Source"  Binding="{Binding Source}"  Width="*"/>
+                                <DataGridTextColumn Header="Montant $" Binding="{Binding Montant, StringFormat='{}{0:N2}'}" Width="120"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+                </TabItem>
+
+                <!-- ── Import relevé ── -->
+                <TabItem Header="📥 Import relevé CSV">
+                    <Grid Margin="16">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0" FontSize="12" Foreground="#555" TextWrapping="Wrap" Margin="0,0,0,8"
+                            Text="Format CSV attendu (avec en-tête) : date, description, montant (positif=crédit, négatif=débit)&#10;Ex : 2026-02-01,Paiement client,1500.00"/>
+                        <TextBox Grid.Row="1" Text="{Binding CsvContent}" AcceptsReturn="True" AcceptsTab="True"
+                                 VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"
+                                 FontFamily="Consolas" FontSize="12" BorderBrush="#CCCCCC" BorderThickness="1"/>
+                        <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,8,0,0">
+                            <Button Content="📥 Importer" Command="{Binding ImporterRelevéCommand}"
+                                    Style="{StaticResource PrimaryBtn}" Height="28" Padding="14,0" Margin="0,0,12,0"/>
+                            <TextBlock Text="{Binding Message}" FontSize="13" Foreground="#333" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Grid>
+                </TabItem>
+            </TabControl>
+        </Grid>
+    </Grid>
+</UserControl>

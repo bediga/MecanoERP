@@ -1,0 +1,132 @@
+<UserControl x:Class="MecanoERP.WPF.Views.DevisView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="#F0F2F5">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <Border Grid.Row="0" Background="White" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="20,12">
+                <StackPanel Orientation="Horizontal">
+                    <Border Width="4" Height="22" Background="#0070F2" CornerRadius="2" Margin="0,0,10,0"/>
+                    <TextBlock Text="Devis" Style="{StaticResource PageTitle}"/>
+                </StackPanel>
+            </Border>
+
+            <Border Grid.Row="1" Background="#FAFAFA" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="14,8">
+                <StackPanel Orientation="Horizontal">
+                    <Button Content="➕ Nouveau devis" Command="{Binding NouveauDevisCommand}"
+                            Style="{StaticResource PrimaryBtn}" Height="28" Margin="0,0,6,0"/>
+                    <Button Content="🔄 Actualiser" Command="{Binding ChargerCommand}"
+                            Style="{StaticResource ToolBarBtn}" Height="28" Margin="0,0,8,0"/>
+                    <TextBlock Text="{Binding MessageStatut}" Foreground="#107E3E"
+                               FontSize="12" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Border>
+
+            <DataGrid Grid.Row="2" Margin="14,10,14,0"
+                      ItemsSource="{Binding DevisList}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="N° Devis"    Binding="{Binding Numero}"           Width="140"/>
+                    <DataGridTextColumn Header="Client"      Binding="{Binding Client.Nom}"        Width="160"/>
+                    <DataGridTextColumn Header="Véhicule"    Binding="{Binding Vehicule.Immatriculation}" Width="120"/>
+                    <DataGridTextColumn Header="Date"        Binding="{Binding DateDevis, StringFormat=dd/MM/yyyy}"  Width="100"/>
+                    <DataGridTextColumn Header="Validité"    Binding="{Binding DateValidite, StringFormat=dd/MM/yyyy}" Width="100"/>
+                    <DataGridTextColumn Header="Total TTC"   Binding="{Binding TotalTTC, StringFormat=C}" Width="110"/>
+                    <DataGridTextColumn Header="Statut"      Binding="{Binding Statut}"            Width="120"/>
+                    <DataGridTemplateColumn Header="Actions" Width="*">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <Button Content="✏ Modifier" Style="{StaticResource ToolBarBtn}"
+                                            Margin="0,0,4,0" Height="22" FontSize="11"
+                                            Command="{Binding DataContext.ModifierDevisCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                            CommandParameter="{Binding}"/>
+                                    <Button Content="→ Convertir en OT" Style="{StaticResource SuccessBtn}"
+                                            Height="22" FontSize="11" Margin="0,0,4,0"
+                                            Command="{Binding DataContext.ConvertirEnOTCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                            CommandParameter="{Binding}"/>
+                                    <Button Content="🗑" Style="{StaticResource DangerBtn}"
+                                            Height="22" FontSize="11" Width="28"
+                                            Command="{Binding DataContext.SupprimerCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                            CommandParameter="{Binding}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <ProgressBar Grid.Row="3" IsIndeterminate="True" Height="3"
+                         Foreground="#0070F2" Background="Transparent" BorderThickness="0"
+                         Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibility}}"/>
+        </Grid>
+
+        <!-- Formulaire -->
+        <Border Grid.Column="1" Width="310" Background="White"
+                BorderBrush="#E0E0E0" BorderThickness="1,0,0,0"
+                Visibility="{Binding AfficherFormulaire, Converter={StaticResource BoolToVisibility}}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Border Grid.Row="0" Background="#0070F2" Padding="16,12">
+                    <TextBlock Text="Nouveau devis" Foreground="White" FontFamily="Segoe UI Semibold" FontSize="14"/>
+                </Border>
+                <ScrollViewer Grid.Row="1">
+                    <StackPanel Margin="16,14,16,0">
+                        <TextBlock Text="Client *" Style="{StaticResource FieldLabel}"/>
+                        <ComboBox ItemsSource="{Binding Clients}" SelectedValuePath="Id"
+                                  SelectedValue="{Binding ClientId}" DisplayMemberPath="Nom"
+                                  Height="28" Margin="0,0,0,10"/>
+                        <TextBlock Text="Véhicule" Style="{StaticResource FieldLabel}"/>
+                        <ComboBox ItemsSource="{Binding Vehicules}" SelectedValuePath="Id"
+                                  SelectedValue="{Binding VehiculeId}" Height="28" Margin="0,0,0,10">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock>
+                                        <TextBlock.Text>
+                                            <MultiBinding StringFormat="{}{0} {1} ({2})">
+                                                <Binding Path="Marque"/><Binding Path="Modele"/><Binding Path="Immatriculation"/>
+                                            </MultiBinding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                        <TextBlock Text="Valide jusqu'au" Style="{StaticResource FieldLabel}"/>
+                        <DatePicker SelectedDate="{Binding DateValidite}" Height="28" Margin="0,0,0,10"
+                                    FontSize="13" FontFamily="Segoe UI"/>
+                        <TextBlock Text="Notes" Style="{StaticResource FieldLabel}"/>
+                        <TextBox Text="{Binding Notes, UpdateSourceTrigger=PropertyChanged}"
+                                 Height="60" TextWrapping="Wrap" AcceptsReturn="True"
+                                 VerticalContentAlignment="Top" Margin="0,0,0,10"/>
+                    </StackPanel>
+                </ScrollViewer>
+                <Border Grid.Row="2" Padding="16,10" BorderBrush="#E0E0E0" BorderThickness="0,1,0,0">
+                    <Grid>
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                        <Button Grid.Column="0" Content="💾 Sauvegarder"
+                                Command="{Binding SauvegarderCommand}"
+                                Style="{StaticResource SuccessBtn}" Margin="0,0,6,0" Height="30"/>
+                        <Button Grid.Column="1" Content="Annuler"
+                                Command="{Binding AnnulerCommand}"
+                                Style="{StaticResource SecondaryBtn}" Height="30"/>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

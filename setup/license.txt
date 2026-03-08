@@ -1,0 +1,12 @@
+LICENCE D'UTILISATION — MecanoERP v1.0
+Copyright © 2026 GISEBS. Tous droits réservés.
+
+Ce logiciel est fourni « tel quel », sans garantie d'aucune sorte,
+explicite ou implicite. L'utilisation de ce logiciel implique
+l'acceptation des termes de la présente licence.
+
+Toute redistribution, modification ou ingénierie inverse de ce
+logiciel est strictement interdite sans l'autorisation écrite
+de GISEBS.
+
+Pour toute question : contact@gisebs.com

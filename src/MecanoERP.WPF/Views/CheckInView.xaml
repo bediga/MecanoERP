@@ -1,0 +1,145 @@
+<UserControl x:Class="MecanoERP.WPF.Views.CheckInView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="#F0F2F5">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="240"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Panneau OTs -->
+        <Border Grid.Column="0" Background="White" BorderBrush="#E0E0E0" BorderThickness="0,0,1,0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Border Grid.Row="0" Background="#0070F2" Padding="14,12">
+                    <TextBlock Text="OTs ouverts" Foreground="White" FontFamily="Segoe UI Semibold" FontSize="13"/>
+                </Border>
+                <Button Grid.Row="1" Content="🔄 Actualiser" Command="{Binding ChargerCommand}"
+                        Style="{StaticResource ToolBarBtn}" Margin="8,8,8,4" Height="28"/>
+                <ListBox Grid.Row="2" ItemsSource="{Binding Ordres}" BorderThickness="0" Background="Transparent">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Margin="4,3">
+                                <TextBlock Text="{Binding Numero}" FontWeight="SemiBold" FontSize="12"/>
+                                <TextBlock Text="{Binding Vehicule.Immatriculation}" Foreground="#555" FontSize="11"/>
+                                <TextBlock Text="{Binding Statut}" Foreground="#0070F2" FontSize="10"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            <Setter Property="Padding" Value="8,4"/>
+                            <EventSetter Event="Selected" Handler="OT_Selected"/>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                </ListBox>
+            </Grid>
+        </Border>
+
+        <!-- Fiche d'entrée -->
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <Border Grid.Row="0" Background="White" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="20,12">
+                <StackPanel Orientation="Horizontal">
+                    <Border Width="4" Height="22" Background="#107E3E" CornerRadius="2" Margin="0,0,10,0"/>
+                    <TextBlock Text="Check-in véhicule" Style="{StaticResource PageTitle}"/>
+                </StackPanel>
+            </Border>
+
+            <Border Grid.Row="1" Background="#FAFAFA" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="14,8">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{Binding MessageStatut}" Foreground="#107E3E" FontSize="12" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Contenu fiche -->
+            <ScrollViewer Grid.Row="2" Margin="20,14,20,0">
+                <StackPanel Visibility="{Binding FicheActive, Converter={StaticResource NullToVisible}}">
+                    <!-- OT info -->
+                    <Border Background="#E3F2FD" BorderBrush="#0070F2" BorderThickness="1" CornerRadius="4" Padding="12,10" Margin="0,0,0,16">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="OT" FontSize="10" Foreground="#6E6E6E"/>
+                                <TextBlock Text="{Binding OtSelectionne.Numero}" FontWeight="Bold" FontSize="14"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1">
+                                <TextBlock Text="Véhicule" FontSize="10" Foreground="#6E6E6E"/>
+                                <TextBlock FontWeight="SemiBold">
+                                    <TextBlock.Text>
+                                        <MultiBinding StringFormat="{}{0} {1}">
+                                            <Binding Path="OtSelectionne.Vehicule.Marque"/>
+                                            <Binding Path="OtSelectionne.Vehicule.Modele"/>
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                                <TextBlock Text="{Binding OtSelectionne.Vehicule.Immatriculation}" Foreground="#555"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="2">
+                                <TextBlock Text="Client" FontSize="10" Foreground="#6E6E6E"/>
+                                <TextBlock Text="{Binding OtSelectionne.Vehicule.Client.Nom}" FontWeight="SemiBold"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <!-- Niveau carburant -->
+                    <TextBlock Text="Niveau carburant" Style="{StaticResource FieldLabel}"/>
+                    <StackPanel Orientation="Horizontal" Margin="0,4,0,14">
+                        <TextBlock Text="E" FontWeight="Bold" Foreground="#BB0000" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                        <Slider Minimum="0" Maximum="8" Value="{Binding NiveauCarburant}"
+                                Width="200" VerticalAlignment="Center" IsSnapToTickEnabled="True" TickFrequency="1"/>
+                        <TextBlock Text="F" FontWeight="Bold" Foreground="#107E3E" VerticalAlignment="Center" Margin="6,0,8,0"/>
+                        <TextBlock Text="{Binding NiveauCarburant}" FontWeight="Bold" FontSize="14" VerticalAlignment="Center"/>
+                        <TextBlock Text="/8" Foreground="#666" VerticalAlignment="Center"/>
+                    </StackPanel>
+
+                    <!-- Checklist -->
+                    <TextBlock Text="Inspection rapide" Style="{StaticResource FieldLabel}"/>
+                    <ItemsControl ItemsSource="{Binding Checklist}" Margin="0,4,0,14">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Margin="4" Padding="8,4" Background="White"
+                                        BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="3">
+                                    <CheckBox IsChecked="{Binding Coche}" Content="{Binding Libelle}" FontSize="12"/>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    <!-- Observations -->
+                    <TextBlock Text="Observations / dommages existants" Style="{StaticResource FieldLabel}"/>
+                    <TextBox Text="{Binding Observations, UpdateSourceTrigger=PropertyChanged}"
+                             Height="80" TextWrapping="Wrap" AcceptsReturn="True"
+                             VerticalContentAlignment="Top" Margin="0,4,0,14"/>
+                </StackPanel>
+            </ScrollViewer>
+
+            <Border Grid.Row="3" Padding="20,10" BorderBrush="#E0E0E0" BorderThickness="0,1,0,0" Background="White">
+                <Button Content="💾 Sauvegarder la fiche d'entrée"
+                        Command="{Binding SauvegarderFicheCommand}"
+                        Style="{StaticResource SuccessBtn}" Height="32" HorizontalAlignment="Left" Width="240"/>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>

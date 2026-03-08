@@ -1,0 +1,221 @@
+<UserControl x:Class="MecanoERP.WPF.Views.EtatsFinanciersView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="#F0F2F5">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Titre -->
+        <Border Grid.Row="0" Background="White" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="20,10">
+            <StackPanel Orientation="Horizontal">
+                <Border Width="4" Height="22" Background="#6D3FBE" CornerRadius="2" Margin="0,0,10,0"/>
+                <TextBlock Text="📊 États financiers" Style="{StaticResource PageTitle}"/>
+            </StackPanel>
+        </Border>
+
+        <TabControl Grid.Row="1" Background="Transparent" BorderThickness="0">
+
+            <!-- ── Onglet Bilan ── -->
+            <TabItem Header="🏦 Bilan">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Filtre -->
+                    <Border Grid.Row="0" Background="#FAFAFA" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="16,8">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Au :" VerticalAlignment="Center" Margin="0,0,6,0" Foreground="#555" FontSize="12"/>
+                            <DatePicker SelectedDate="{Binding DateBilan}" Height="28" Width="130" Margin="0,0,12,0"/>
+                            <Button Content="📊 Générer bilan" Command="{Binding ChargerBilanCommand}"
+                                    Style="{StaticResource PrimaryBtn}" Height="28" Padding="14,0"/>
+                            <Border Margin="12,0,0,0" Padding="8,4" CornerRadius="3"
+                                    Visibility="{Binding BilanEquilibre, Converter={StaticResource BoolToVisibility}}">
+                                <Border.Background><SolidColorBrush Color="#107E3E" Opacity="0.12"/></Border.Background>
+                                <TextBlock Text="✅ Bilan équilibré" Foreground="#107E3E" FontFamily="Segoe UI Semibold" FontSize="12"/>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Corps du bilan — 2 colonnes -->
+                    <ScrollViewer Grid.Row="1">
+                        <Grid Margin="16,12,16,16">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="12"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- ACTIF -->
+                            <Border Grid.Column="0" Background="White" BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="4">
+                                <StackPanel>
+                                    <Border Background="#EFF6FF" BorderBrush="#C0D8F8" BorderThickness="0,0,0,1" Padding="14,10" CornerRadius="4,4,0,0">
+                                        <TextBlock Text="ACTIF" FontFamily="Segoe UI Semibold" FontSize="13" Foreground="#0070F2"/>
+                                    </Border>
+                                    <DataGrid ItemsSource="{Binding PostesActif}" IsReadOnly="True" AutoGenerateColumns="False"
+                                              BorderThickness="0" GridLinesVisibility="Horizontal" FontSize="12">
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Header="N°"     Binding="{Binding Numero}" Width="70"/>
+                                            <DataGridTextColumn Header="Compte" Binding="{Binding Nom}"    Width="*"/>
+                                            <DataGridTextColumn Header="Montant $" Binding="{Binding Montant, StringFormat='{}{0:N2}'}" Width="110"/>
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+                                    <Border Background="#EFF6FF" Padding="14,8">
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                            <TextBlock Text="Total Actif : " FontFamily="Segoe UI Semibold" FontSize="13"/>
+                                            <TextBlock Text="{Binding TotalActif, StringFormat='{}{0:N2} $'}"
+                                                       FontFamily="Segoe UI Semibold" Foreground="#0070F2" FontSize="13"/>
+                                        </StackPanel>
+                                    </Border>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- PASSIF + CAPITAL -->
+                            <StackPanel Grid.Column="2">
+                                <Border Background="White" BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="4" Margin="0,0,0,10">
+                                    <StackPanel>
+                                        <Border Background="#FFF8F0" BorderBrush="#FFDDB5" BorderThickness="0,0,0,1" Padding="14,10" CornerRadius="4,4,0,0">
+                                            <TextBlock Text="PASSIF" FontFamily="Segoe UI Semibold" FontSize="13" Foreground="#E9730C"/>
+                                        </Border>
+                                        <DataGrid ItemsSource="{Binding PostesPassif}" IsReadOnly="True" AutoGenerateColumns="False"
+                                                  BorderThickness="0" GridLinesVisibility="Horizontal" FontSize="12">
+                                            <DataGrid.Columns>
+                                                <DataGridTextColumn Header="N°"     Binding="{Binding Numero}" Width="70"/>
+                                                <DataGridTextColumn Header="Compte" Binding="{Binding Nom}"    Width="*"/>
+                                                <DataGridTextColumn Header="Montant $" Binding="{Binding Montant, StringFormat='{}{0:N2}'}" Width="110"/>
+                                            </DataGrid.Columns>
+                                        </DataGrid>
+                                        <Border Background="#FFF8F0" Padding="14,8">
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                                <TextBlock Text="Total Passif : " FontFamily="Segoe UI Semibold" FontSize="13"/>
+                                                <TextBlock Text="{Binding TotalPassif, StringFormat='{}{0:N2} $'}"
+                                                           FontFamily="Segoe UI Semibold" Foreground="#E9730C" FontSize="13"/>
+                                            </StackPanel>
+                                        </Border>
+                                    </StackPanel>
+                                </Border>
+                                <Border Background="White" BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="4">
+                                    <StackPanel>
+                                        <Border Background="#F5F0FF" BorderBrush="#D0B8FF" BorderThickness="0,0,0,1" Padding="14,10" CornerRadius="4,4,0,0">
+                                            <TextBlock Text="CAPITAL" FontFamily="Segoe UI Semibold" FontSize="13" Foreground="#6D3FBE"/>
+                                        </Border>
+                                        <DataGrid ItemsSource="{Binding PostesCapital}" IsReadOnly="True" AutoGenerateColumns="False"
+                                                  BorderThickness="0" GridLinesVisibility="Horizontal" FontSize="12">
+                                            <DataGrid.Columns>
+                                                <DataGridTextColumn Header="N°"     Binding="{Binding Numero}" Width="70"/>
+                                                <DataGridTextColumn Header="Compte" Binding="{Binding Nom}"    Width="*"/>
+                                                <DataGridTextColumn Header="Montant $" Binding="{Binding Montant, StringFormat='{}{0:N2}'}" Width="110"/>
+                                            </DataGrid.Columns>
+                                        </DataGrid>
+                                        <Border Background="#F5F0FF" Padding="14,8">
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                                <TextBlock Text="Total Capital : " FontFamily="Segoe UI Semibold" FontSize="13"/>
+                                                <TextBlock Text="{Binding TotalCapital, StringFormat='{}{0:N2} $'}"
+                                                           FontFamily="Segoe UI Semibold" Foreground="#6D3FBE" FontSize="13"/>
+                                            </StackPanel>
+                                        </Border>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                        </Grid>
+                    </ScrollViewer>
+                </Grid>
+            </TabItem>
+
+            <!-- ── Onglet État des résultats ── -->
+            <TabItem Header="📈 État des résultats">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Filtre -->
+                    <Border Grid.Row="0" Background="#FAFAFA" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="16,8">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Du :" VerticalAlignment="Center" Margin="0,0,6,0" Foreground="#555" FontSize="12"/>
+                            <DatePicker SelectedDate="{Binding DebutResultats}" Height="28" Width="120" Margin="0,0,8,0"/>
+                            <TextBlock Text="Au :" VerticalAlignment="Center" Margin="0,0,6,0" Foreground="#555" FontSize="12"/>
+                            <DatePicker SelectedDate="{Binding FinResultats}"   Height="28" Width="120" Margin="0,0,12,0"/>
+                            <Button Content="📈 Générer" Command="{Binding ChargerResultatsCommand}"
+                                    Style="{StaticResource PrimaryBtn}" Height="28" Padding="14,0"/>
+                        </StackPanel>
+                    </Border>
+
+                    <ScrollViewer Grid.Row="1">
+                        <Grid Margin="16,12,16,16">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="12"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Revenus -->
+                            <Border Grid.Column="0" Background="White" BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="4">
+                                <StackPanel>
+                                    <Border Background="#F0FFF4" BorderBrush="#C8E6C9" BorderThickness="0,0,0,1" Padding="14,10" CornerRadius="4,4,0,0">
+                                        <TextBlock Text="REVENUS" FontFamily="Segoe UI Semibold" FontSize="13" Foreground="#107E3E"/>
+                                    </Border>
+                                    <DataGrid ItemsSource="{Binding PostesRevenus}" IsReadOnly="True" AutoGenerateColumns="False"
+                                              BorderThickness="0" GridLinesVisibility="Horizontal" FontSize="12">
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Header="N°"     Binding="{Binding Numero}" Width="70"/>
+                                            <DataGridTextColumn Header="Compte" Binding="{Binding Nom}"    Width="*"/>
+                                            <DataGridTextColumn Header="Montant $" Binding="{Binding Montant, StringFormat='{}{0:N2}'}" Width="110"/>
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+                                    <Border Background="#F0FFF4" Padding="14,8">
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                            <TextBlock Text="Total Revenus : " FontFamily="Segoe UI Semibold" FontSize="13"/>
+                                            <TextBlock Text="{Binding TotalRevenus, StringFormat='{}{0:N2} $'}"
+                                                       FontFamily="Segoe UI Semibold" Foreground="#107E3E" FontSize="13"/>
+                                        </StackPanel>
+                                    </Border>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Charges + Bénéfice -->
+                            <StackPanel Grid.Column="2">
+                                <Border Background="White" BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="4" Margin="0,0,0,10">
+                                    <StackPanel>
+                                        <Border Background="#FFF0F0" BorderBrush="#FFCCCC" BorderThickness="0,0,0,1" Padding="14,10" CornerRadius="4,4,0,0">
+                                            <TextBlock Text="CHARGES" FontFamily="Segoe UI Semibold" FontSize="13" Foreground="#BB0000"/>
+                                        </Border>
+                                        <DataGrid ItemsSource="{Binding PostesCharges}" IsReadOnly="True" AutoGenerateColumns="False"
+                                                  BorderThickness="0" GridLinesVisibility="Horizontal" FontSize="12">
+                                            <DataGrid.Columns>
+                                                <DataGridTextColumn Header="N°"     Binding="{Binding Numero}" Width="70"/>
+                                                <DataGridTextColumn Header="Compte" Binding="{Binding Nom}"    Width="*"/>
+                                                <DataGridTextColumn Header="Montant $" Binding="{Binding Montant, StringFormat='{}{0:N2}'}" Width="110"/>
+                                            </DataGrid.Columns>
+                                        </DataGrid>
+                                        <Border Background="#FFF0F0" Padding="14,8">
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                                <TextBlock Text="Total Charges : " FontFamily="Segoe UI Semibold" FontSize="13"/>
+                                                <TextBlock Text="{Binding TotalCharges, StringFormat='{}{0:N2} $'}"
+                                                           FontFamily="Segoe UI Semibold" Foreground="#BB0000" FontSize="13"/>
+                                            </StackPanel>
+                                        </Border>
+                                    </StackPanel>
+                                </Border>
+
+                                <!-- Résultat net -->
+                                <Border Background="#1C1C1C" CornerRadius="4" Padding="16,14">
+                                    <StackPanel>
+                                        <TextBlock Text="BÉNÉFICE NET" FontFamily="Segoe UI Semibold" FontSize="12" Foreground="#999"/>
+                                        <TextBlock Text="{Binding BeneficeNet, StringFormat='{}{0:N2} $'}"
+                                                   FontFamily="Segoe UI Semibold" FontSize="28" Foreground="#FFD700" Margin="0,4,0,0"/>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                        </Grid>
+                    </ScrollViewer>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</UserControl>

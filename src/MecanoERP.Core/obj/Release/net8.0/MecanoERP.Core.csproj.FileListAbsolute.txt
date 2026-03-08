@@ -1,0 +1,11 @@
+C:\Users\bedig\.gemini\antigravity\scratch\MecanoERP\src\MecanoERP.Core\bin\Release\net8.0\MecanoERP.Core.deps.json
+C:\Users\bedig\.gemini\antigravity\scratch\MecanoERP\src\MecanoERP.Core\bin\Release\net8.0\MecanoERP.Core.dll
+C:\Users\bedig\.gemini\antigravity\scratch\MecanoERP\src\MecanoERP.Core\bin\Release\net8.0\MecanoERP.Core.pdb
+C:\Users\bedig\.gemini\antigravity\scratch\MecanoERP\src\MecanoERP.Core\obj\Release\net8.0\MecanoERP.Core.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\bedig\.gemini\antigravity\scratch\MecanoERP\src\MecanoERP.Core\obj\Release\net8.0\MecanoERP.Core.AssemblyInfoInputs.cache
+C:\Users\bedig\.gemini\antigravity\scratch\MecanoERP\src\MecanoERP.Core\obj\Release\net8.0\MecanoERP.Core.AssemblyInfo.cs
+C:\Users\bedig\.gemini\antigravity\scratch\MecanoERP\src\MecanoERP.Core\obj\Release\net8.0\MecanoERP.Core.csproj.CoreCompileInputs.cache
+C:\Users\bedig\.gemini\antigravity\scratch\MecanoERP\src\MecanoERP.Core\obj\Release\net8.0\MecanoERP.Core.dll
+C:\Users\bedig\.gemini\antigravity\scratch\MecanoERP\src\MecanoERP.Core\obj\Release\net8.0\refint\MecanoERP.Core.dll
+C:\Users\bedig\.gemini\antigravity\scratch\MecanoERP\src\MecanoERP.Core\obj\Release\net8.0\MecanoERP.Core.pdb
+C:\Users\bedig\.gemini\antigravity\scratch\MecanoERP\src\MecanoERP.Core\obj\Release\net8.0\ref\MecanoERP.Core.dll

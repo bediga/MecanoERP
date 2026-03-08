@@ -1,0 +1,105 @@
+<UserControl x:Class="MecanoERP.WPF.Views.GrandLivreView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="#F0F2F5">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Titre -->
+        <Border Grid.Row="0" Background="White" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="20,10">
+            <StackPanel Orientation="Horizontal">
+                <Border Width="4" Height="22" Background="#0070F2" CornerRadius="2" Margin="0,0,10,0"/>
+                <TextBlock Text="📒 Grand Livre" Style="{StaticResource PageTitle}"/>
+                <TextBlock Text="{Binding NomCompte}" FontSize="13" Foreground="#555"
+                           VerticalAlignment="Center" Margin="16,0,0,0"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Barre de filtres -->
+        <Border Grid.Row="1" Background="#FAFAFA" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="16,8">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Compte :" VerticalAlignment="Center" Margin="0,0,6,0" Foreground="#555" FontSize="12"/>
+                <ComboBox ItemsSource="{Binding Comptes}"
+                          SelectedItem="{Binding CompteSelectionne}"
+                          Width="280" Height="28" Margin="0,0,12,0">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock>
+                                <Run Text="{Binding Numero}"/>
+                                <Run Text=" — "/>
+                                <Run Text="{Binding Nom}"/>
+                            </TextBlock>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+                <TextBlock Text="Du :" VerticalAlignment="Center" Margin="0,0,6,0" Foreground="#555" FontSize="12"/>
+                <DatePicker SelectedDate="{Binding DateDebut}" Height="28" Width="120" Margin="0,0,8,0"/>
+                <TextBlock Text="Au :" VerticalAlignment="Center" Margin="0,0,6,0" Foreground="#555" FontSize="12"/>
+                <DatePicker SelectedDate="{Binding DateFin}" Height="28" Width="120" Margin="0,0,12,0"/>
+                <Button Content="🔍 Afficher" Command="{Binding RechercherCommand}"
+                        Style="{StaticResource PrimaryBtn}" Height="28" Padding="14,0"/>
+                <ProgressBar IsIndeterminate="True" Height="3" Width="80" Margin="12,0,0,0"
+                             VerticalAlignment="Center" Foreground="#0070F2" Background="Transparent"
+                             BorderThickness="0"
+                             Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibility}}"/>
+            </StackPanel>
+        </Border>
+
+        <!-- DataGrid -->
+        <DataGrid Grid.Row="2" ItemsSource="{Binding Lignes}"
+                  IsReadOnly="True" AutoGenerateColumns="False"
+                  BorderThickness="0" GridLinesVisibility="Horizontal"
+                  AlternatingRowBackground="#F7F9FC" FontSize="12">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Date"       Binding="{Binding Date, StringFormat='dd/MM/yyyy'}" Width="90"/>
+                <DataGridTextColumn Header="N° Pièce"   Binding="{Binding Numero}"       Width="120"/>
+                <DataGridTextColumn Header="Journal"    Binding="{Binding JournalCode}"  Width="70"/>
+                <DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="*"/>
+                <DataGridTextColumn Header="Référence"  Binding="{Binding Reference}"   Width="110"/>
+                <DataGridTextColumn Header="Centre"     Binding="{Binding CentreCoût}"  Width="80"/>
+                <DataGridTextColumn Header="Débit"      Binding="{Binding Debit, StringFormat='{}{0:N2}'}"  Width="100"/>
+                <DataGridTextColumn Header="Crédit"     Binding="{Binding Credit, StringFormat='{}{0:N2}'}" Width="100"/>
+                <DataGridTextColumn Header="Solde"      Binding="{Binding Solde, StringFormat='{}{0:N2}'}"  Width="100"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!-- Pied de page totaux -->
+        <Border Grid.Row="3" Background="White" BorderBrush="#E0E0E0" BorderThickness="0,1,0,0" Padding="16,8">
+            <Grid>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Solde d'ouverture :" FontFamily="Segoe UI Semibold" FontSize="12" Margin="0,0,6,0"/>
+                    <TextBlock Text="{Binding SoldeOuverture, StringFormat='{}{0:N2} $'}" FontFamily="Segoe UI Semibold"
+                               Foreground="#0070F2" FontSize="12"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Border Background="#F0F4FF" Padding="10,4" CornerRadius="3" Margin="0,0,8,0">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Total débit : " FontSize="12"/>
+                            <TextBlock Text="{Binding TotalDebit, StringFormat='{}{0:N2} $'}"
+                                       FontFamily="Segoe UI Semibold" Foreground="#0070F2" FontSize="12"/>
+                        </StackPanel>
+                    </Border>
+                    <Border Background="#F0FFF4" Padding="10,4" CornerRadius="3" Margin="0,0,8,0">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Total crédit : " FontSize="12"/>
+                            <TextBlock Text="{Binding TotalCredit, StringFormat='{}{0:N2} $'}"
+                                       FontFamily="Segoe UI Semibold" Foreground="#107E3E" FontSize="12"/>
+                        </StackPanel>
+                    </Border>
+                    <Border Background="#1C1C1C" Padding="10,4" CornerRadius="3">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Solde final : " FontSize="12" Foreground="White"/>
+                            <TextBlock Text="{Binding SoldeFinal, StringFormat='{}{0:N2} $'}"
+                                       FontFamily="Segoe UI Semibold" Foreground="#FFD700" FontSize="12"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

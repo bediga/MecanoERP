@@ -1,0 +1,23 @@
+<UserControl x:Class="MecanoERP.WPF.Views.UtilisateursView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="#0D0D1A">
+    <Grid Margin="24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" Text="👤 Utilisateurs" FontSize="24" FontWeight="Bold" Foreground="#4FC3F7" Margin="0,0,0,16"/>
+        <ListView Grid.Row="1" ItemsSource="{Binding Utilisateurs}">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Login"      DisplayMemberBinding="{Binding NomUtilisateur}" Width="130"/>
+                    <GridViewColumn Header="Nom complet" DisplayMemberBinding="{Binding NomComplet}"   Width="160"/>
+                    <GridViewColumn Header="Rôle"       DisplayMemberBinding="{Binding Role.Nom}"      Width="130"/>
+                    <GridViewColumn Header="Actif"      DisplayMemberBinding="{Binding EstActif}"      Width="70"/>
+                    <GridViewColumn Header="Dernière connexion" DisplayMemberBinding="{Binding DernierConnexion, StringFormat=g}" Width="150"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </Grid>
+</UserControl>

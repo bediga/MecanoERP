@@ -1,0 +1,249 @@
+<Window x:Class="MecanoERP.WPF.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MecanoERP — Système de gestion de garage"
+        Width="1366" Height="768"
+        WindowStartupLocation="CenterScreen"
+        WindowState="Maximized"
+        Icon="/Assets/mecanoerp.ico"
+        Background="#F0F2F5">
+
+    <Window.Resources>
+        <!-- Style Expander pour groupes de navigation -->
+        <Style x:Key="NavGroupExpander" TargetType="Expander">
+            <Setter Property="IsExpanded" Value="True"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Expander">
+                        <StackPanel>
+                            <!-- En-tête de groupe cliquable -->
+                            <ToggleButton IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
+                                         Cursor="Hand" Background="Transparent" BorderThickness="0"
+                                         Padding="12,6,8,6" HorizontalContentAlignment="Stretch">
+                                <ToggleButton.Style>
+                                    <Style TargetType="ToggleButton">
+                                        <Setter Property="Background" Value="Transparent"/>
+                                        <Setter Property="BorderThickness" Value="0"/>
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="ToggleButton">
+                                                    <Border Background="{TemplateBinding Background}"
+                                                            Padding="{TemplateBinding Padding}">
+                                                        <Grid>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="*"/>
+                                                                <ColumnDefinition Width="Auto"/>
+                                                            </Grid.ColumnDefinitions>
+                                                            <ContentPresenter Grid.Column="0" VerticalAlignment="Center"/>
+                                                            <TextBlock Grid.Column="1" x:Name="arrow" Text="▾"
+                                                                       FontSize="10" Foreground="#999"
+                                                                       VerticalAlignment="Center" Margin="4,0,0,0"/>
+                                                        </Grid>
+                                                    </Border>
+                                                    <ControlTemplate.Triggers>
+                                                        <Trigger Property="IsChecked" Value="False">
+                                                            <Setter TargetName="arrow" Property="Text" Value="▸"/>
+                                                        </Trigger>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter Property="Background" Value="#F0F4FF"/>
+                                                        </Trigger>
+                                                    </ControlTemplate.Triggers>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </ToggleButton.Style>
+                                <ContentPresenter ContentSource="Header"/>
+                            </ToggleButton>
+                            <!-- Contenu collapsible -->
+                            <ContentPresenter x:Name="body" ContentSource="Content"/>
+                        </StackPanel>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsExpanded" Value="False">
+                                <Setter TargetName="body" Property="Visibility" Value="Collapsed"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- TextBlock d'en-tête de groupe -->
+        <Style x:Key="GroupHeader" TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="Segoe UI Semibold"/>
+            <Setter Property="FontSize" Value="10"/>
+            <Setter Property="Foreground" Value="#888"/>
+            <Setter Property="Margin" Value="0,0,0,0"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="22"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="220"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- ═══════════════════════ SIDEBAR ═══════════════════════════════ -->
+        <Border Grid.Column="0" Grid.Row="0"
+                Background="White"
+                BorderBrush="#E0E0E0" BorderThickness="0,0,1,0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- En-tête Sidebar avec logo -->
+                <Border Grid.Row="0" Background="#0070F2" Padding="12,10">
+                    <StackPanel>
+                        <Image Source="/Assets/logo.png" Height="54" Margin="0,0,0,4"
+                               HorizontalAlignment="Center" RenderOptions.BitmapScalingMode="HighQuality"/>
+                        <TextBlock x:Name="lblUser" Text=""
+                                   FontFamily="Segoe UI" FontSize="11"
+                                   Foreground="#B3D9FF"
+                                   HorizontalAlignment="Center"
+                                   Margin="0,2,0,0"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Navigation avec groupes collapsibles -->
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                    <StackPanel>
+
+                        <!-- ── PRINCIPAL ───────────────────────────── -->
+                        <Expander Style="{StaticResource NavGroupExpander}" IsExpanded="False">
+                            <Expander.Header>
+                                <TextBlock Text="PRINCIPAL" Style="{StaticResource GroupHeader}"/>
+                            </Expander.Header>
+                            <StackPanel>
+                                <Button x:Name="btnDashboard" Content="  📊  Tableau de bord" Style="{StaticResource NavBtnActive}" Click="OnNav" Tag="Dashboard"/>
+                                <Button Content="  📅  Rendez-vous" Style="{StaticResource NavBtn}" Click="OnNav" Tag="RendezVous"/>
+                            </StackPanel>
+                        </Expander>
+
+                        <!-- ── ATELIER ─────────────────────────────── -->
+                        <Expander Style="{StaticResource NavGroupExpander}" IsExpanded="False">
+                            <Expander.Header>
+                                <TextBlock Text="ATELIER" Style="{StaticResource GroupHeader}"/>
+                            </Expander.Header>
+                            <StackPanel>
+                                <Button Content="  👥  Clients"           Style="{StaticResource NavBtn}" Click="OnNav" Tag="Clients"/>
+                                <Button Content="  🚗  Véhicules"         Style="{StaticResource NavBtn}" Click="OnNav" Tag="Vehicules"/>
+                                <Button Content="  🔧  Ordres de travail" Style="{StaticResource NavBtn}" Click="OnNav" Tag="OrdresTravail"/>
+                            </StackPanel>
+                        </Expander>
+
+                        <!-- ── COMMERCIAL ──────────────────────────── -->
+                        <Expander Style="{StaticResource NavGroupExpander}" IsExpanded="False">
+                            <Expander.Header>
+                                <TextBlock Text="COMMERCIAL" Style="{StaticResource GroupHeader}"/>
+                            </Expander.Header>
+                            <StackPanel>
+                                <Button Content="  📦  Inventaire"  Style="{StaticResource NavBtn}" Click="OnNav" Tag="Inventaire"/>
+                                <Button Content="  🧾  Facturation" Style="{StaticResource NavBtn}" Click="OnNav" Tag="Facturation"/>
+                                <Button Content="  🛡  Garanties"   Style="{StaticResource NavBtn}" Click="OnNav" Tag="Garanties"/>
+                            </StackPanel>
+                        </Expander>
+
+                        <!-- ── COMPTABILITÉ ────────────────────────── -->
+                        <Expander Style="{StaticResource NavGroupExpander}" IsExpanded="False">
+                            <Expander.Header>
+                                <TextBlock Text="COMPTABILITÉ" Style="{StaticResource GroupHeader}"/>
+                            </Expander.Header>
+                            <StackPanel>
+                                <Button Content="  📒  Comptabilité"        Style="{StaticResource NavBtn}" Click="OnNav" Tag="Comptabilite"/>
+                                <Button Content="  📋  Plan comptable"      Style="{StaticResource NavBtn}" Click="OnNav" Tag="PlanComptable"/>
+                                <Button Content="  📓  Journaux"            Style="{StaticResource NavBtn}" Click="OnNav" Tag="Journaux"/>
+                                <Button Content="  📘  Grand Livre"         Style="{StaticResource NavBtn}" Click="OnNav" Tag="GrandLivre"/>
+                                <Button Content="  ⚖  Balance vérification" Style="{StaticResource NavBtn}" Click="OnNav" Tag="BalanceVerification"/>
+                                <Button Content="  📊  États financiers"    Style="{StaticResource NavBtn}" Click="OnNav" Tag="EtatsFinanciers"/>
+                                <Button Content="  🔒  Clôture périodes"    Style="{StaticResource NavBtn}" Click="OnNav" Tag="CloturePeriode"/>
+                                <Button Content="  🧮  Config. taxes"       Style="{StaticResource NavBtn}" Click="OnNav" Tag="ConfigTaxes"/>
+                                <Button Content="  📈  Rapports"            Style="{StaticResource NavBtn}" Click="OnNav" Tag="Rapports"/>
+                            </StackPanel>
+                        </Expander>
+
+                        <!-- ── FINANCES ────────────────────────────── -->
+                        <Expander Style="{StaticResource NavGroupExpander}" IsExpanded="False">
+                            <Expander.Header>
+                                <TextBlock Text="FINANCES" Style="{StaticResource GroupHeader}"/>
+                            </Expander.Header>
+                            <StackPanel>
+                                <Button Content="  👥  Comptes clients (AR)"     Style="{StaticResource NavBtn}" Click="OnNav" Tag="GestionAR"/>
+                                <Button Content="  🏢  Comptes fourn. (AP)"      Style="{StaticResource NavBtn}" Click="OnNav" Tag="GestionAP"/>
+                                <Button Content="  🏦  Trésorerie &amp; Banks"   Style="{StaticResource NavBtn}" Click="OnNav" Tag="Tresorerie"/>
+                            </StackPanel>
+                        </Expander>
+
+                        <!-- ── ACHATS &amp; VENTES ─────────────────── -->
+                        <Expander Style="{StaticResource NavGroupExpander}" IsExpanded="False">
+                            <Expander.Header>
+                                <TextBlock Text="ACHATS &amp; VENTES" Style="{StaticResource GroupHeader}"/>
+                            </Expander.Header>
+                            <StackPanel>
+                                <Button Content="  📝  Devis"            Style="{StaticResource NavBtn}" Click="OnNav" Tag="Devis"/>
+                                <Button Content="  🛒  Achats / DA"      Style="{StaticResource NavBtn}" Click="OnNav" Tag="Achats"/>
+                                <Button Content="  🏢  Factures fourn."  Style="{StaticResource NavBtn}" Click="OnNav" Tag="FacturesFournisseurs"/>
+                                <Button Content="  📄  Avoirs clients"   Style="{StaticResource NavBtn}" Click="OnNav" Tag="Avoirs"/>
+                                <Button Content="  🏦  Banque"           Style="{StaticResource NavBtn}" Click="OnNav" Tag="Banque"/>
+                            </StackPanel>
+                        </Expander>
+
+                        <!-- ── ADMINISTRATION ─────────────────────── -->
+                        <Expander Style="{StaticResource NavGroupExpander}" IsExpanded="False">
+                            <Expander.Header>
+                                <TextBlock Text="ADMINISTRATION" Style="{StaticResource GroupHeader}"/>
+                            </Expander.Header>
+                            <StackPanel>
+                                <Button Content="  👷  Employés"    Style="{StaticResource NavBtn}" Click="OnNav" Tag="Employes"/>
+                                <Button Content="  🏭  Fournisseurs" Style="{StaticResource NavBtn}" Click="OnNav" Tag="Fournisseurs"/>
+                                <Button Content="  👤  Utilisateurs" Style="{StaticResource NavBtn}" Click="OnNav" Tag="Utilisateurs"/>
+                                <Button Content="  ⚙  Paramètres"  Style="{StaticResource NavBtn}" Click="OnNav" Tag="Parametres"/>
+                            </StackPanel>
+                        </Expander>
+
+                        <!-- ── ATELIER AVANCÉ ──────────────────────── -->
+                        <Expander Style="{StaticResource NavGroupExpander}" IsExpanded="False">
+                            <Expander.Header>
+                                <TextBlock Text="ATELIER AVANCÉ" Style="{StaticResource GroupHeader}"/>
+                            </Expander.Header>
+                            <StackPanel>
+                                <Button Content="  🚗  Check-in véhicule" Style="{StaticResource NavBtn}" Click="OnNav" Tag="CheckIn"/>
+                                <Button Content="  ⏱  Pointage"          Style="{StaticResource NavBtn}" Click="OnNav" Tag="Pointage"/>
+                                <Button Content="  📋  Journal d'audit"  Style="{StaticResource NavBtn}" Click="OnNav" Tag="Audit"/>
+                            </StackPanel>
+                        </Expander>
+
+                    </StackPanel>
+                </ScrollViewer>
+
+                <!-- Pied sidebar -->
+                <Border Grid.Row="2" BorderBrush="#E0E0E0" BorderThickness="0,1,0,0" Padding="0,4,0,4">
+                    <Button Content="  🚪  Déconnexion"
+                            Style="{StaticResource NavBtn}"
+                            Click="OnDeconnexion"
+                            Foreground="#BB0000"/>
+                </Border>
+            </Grid>
+        </Border>
+
+        <!-- ═══════════════════════ CONTENU ════════════════════════════════ -->
+        <ContentControl x:Name="ContentArea" Grid.Column="1" Grid.Row="0" Background="#F0F2F5"/>
+
+        <!-- ═══════════════════════ BARRE STATUT ══════════════════════════ -->
+        <Border Grid.Row="1" Grid.ColumnSpan="2" Background="#0070F2" Padding="12,0">
+            <Grid>
+                <TextBlock Text="MecanoERP v1.0 — Système de gestion de garage"
+                           Foreground="White" FontSize="11" VerticalAlignment="Center"/>
+                <TextBlock Text="© 2026 GISEBS"
+                           Foreground="#80BBFF" FontSize="11"
+                           HorizontalAlignment="Right" VerticalAlignment="Center"/>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

@@ -1,0 +1,50 @@
+<UserControl x:Class="MecanoERP.WPF.Views.AuditView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="#F0F2F5">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" Background="White" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="20,12">
+            <StackPanel Orientation="Horizontal">
+                <Border Width="4" Height="22" Background="#6E6E6E" CornerRadius="2" Margin="0,0,10,0"/>
+                <TextBlock Text="Journal d'audit" Style="{StaticResource PageTitle}"/>
+            </StackPanel>
+        </Border>
+
+        <Border Grid.Row="1" Background="#FAFAFA" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="14,8">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Module :" VerticalAlignment="Center" Margin="0,0,6,0" FontSize="12"/>
+                <ComboBox ItemsSource="{Binding Modules}" SelectedItem="{Binding FiltreModule}"
+                          Width="110" Height="26" Margin="0,0,10,0"/>
+                <TextBlock Text="Du :" VerticalAlignment="Center" Margin="0,0,4,0" FontSize="12"/>
+                <DatePicker SelectedDate="{Binding DateDebut}" Height="26" Width="115" Margin="0,0,6,0"
+                            FontSize="12" FontFamily="Segoe UI"/>
+                <TextBlock Text="Au :" VerticalAlignment="Center" Margin="0,0,4,0" FontSize="12"/>
+                <DatePicker SelectedDate="{Binding DateFin}" Height="26" Width="115" Margin="0,0,10,0"
+                            FontSize="12" FontFamily="Segoe UI"/>
+                <Button Content="🔍 Filtrer" Command="{Binding ChargerCommand}"
+                        Style="{StaticResource PrimaryBtn}" Height="26" Width="80"/>
+            </StackPanel>
+        </Border>
+
+        <DataGrid Grid.Row="2" Margin="14,10,14,10"
+                  ItemsSource="{Binding Logs}"
+                  IsReadOnly="True">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Date/Heure" Binding="{Binding DateAction, StringFormat=dd/MM/yyyy HH:mm:ss}" Width="150"/>
+                <DataGridTextColumn Header="Utilisateur"  Binding="{Binding NomUtilisateur}"   Width="140"/>
+                <DataGridTextColumn Header="Module"       Binding="{Binding Module}"            Width="100"/>
+                <DataGridTextColumn Header="Action"       Binding="{Binding TypeAction}"        Width="130"/>
+                <DataGridTextColumn Header="Document"     Binding="{Binding DocumentNumero}"    Width="120"/>
+                <DataGridTextColumn Header="Description"  Binding="{Binding Description}"       Width="*"/>
+                <DataGridTextColumn Header="Ancienne val." Binding="{Binding AncienneValeur}"   Width="120"/>
+                <DataGridTextColumn Header="Nouvelle val." Binding="{Binding NouvelleValeur}"   Width="120"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</UserControl>

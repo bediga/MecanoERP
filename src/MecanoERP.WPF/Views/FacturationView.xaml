@@ -1,0 +1,122 @@
+<UserControl x:Class="MecanoERP.WPF.Views.FacturationView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="#F0F2F5">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <Border Grid.Row="0" Background="White" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="20,12">
+                <StackPanel Orientation="Horizontal">
+                    <Border Width="4" Height="22" Background="#0070F2" CornerRadius="2" Margin="0,0,10,0"/>
+                    <TextBlock Text="Facturation" Style="{StaticResource PageTitle}"/>
+                </StackPanel>
+            </Border>
+
+            <Border Grid.Row="1" Background="#FAFAFA" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="14,8">
+                <StackPanel Orientation="Horizontal">
+                    <Button Content="🔄 Actualiser" Command="{Binding ChargerCommand}"
+                            Style="{StaticResource ToolBarBtn}" Height="28" Margin="0,0,8,0"/>
+                    <TextBlock Text="{Binding MessageStatut}" Foreground="#107E3E"
+                               FontSize="12" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Border>
+
+            <DataGrid Grid.Row="2" Margin="14,10,14,0"
+                      ItemsSource="{Binding Factures}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="N° Facture"   Binding="{Binding Numero}"           Width="140"/>
+                    <DataGridTextColumn Header="Client"       Binding="{Binding Client.Nom}"        Width="160"/>
+                    <DataGridTextColumn Header="Date"         Binding="{Binding DateFacture, StringFormat=dd/MM/yyyy}" Width="100"/>
+                    <DataGridTextColumn Header="Montant HT"   Binding="{Binding MontantHT, StringFormat=C}"  Width="110"/>
+                    <DataGridTextColumn Header="TTC"          Binding="{Binding MontantTTC, StringFormat=C}" Width="110"/>
+                    <DataGridTextColumn Header="Payé"         Binding="{Binding MontantPaye, StringFormat=C}" Width="110"/>
+                    <DataGridTextColumn Header="Solde"        Binding="{Binding SoldeRestant, StringFormat=C}" Width="110"/>
+                    <DataGridTextColumn Header="Statut"       Binding="{Binding Statut}"            Width="130"/>
+                    <DataGridTemplateColumn Header="Actions" Width="*">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="💳 Paiement" Style="{StaticResource PrimaryBtn}"
+                                        Height="22" FontSize="11"
+                                        Command="{Binding DataContext.OuvrirPaiementCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                        CommandParameter="{Binding}"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <ProgressBar Grid.Row="3" IsIndeterminate="True" Height="3"
+                         Foreground="#0070F2" Background="Transparent" BorderThickness="0"
+                         Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibility}}"/>
+        </Grid>
+
+        <!-- Panneau paiement -->
+        <Border Grid.Column="1" Width="300" Background="White"
+                BorderBrush="#E0E0E0" BorderThickness="1,0,0,0"
+                Visibility="{Binding AfficherPaiement, Converter={StaticResource BoolToVisibility}}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Border Grid.Row="0" Background="#107E3E" Padding="16,12">
+                    <TextBlock Text="Enregistrer paiement" Foreground="White" FontFamily="Segoe UI Semibold" FontSize="14"/>
+                </Border>
+                <StackPanel Grid.Row="1" Margin="16,14,16,0">
+                    <!-- Info facture -->
+                    <Border Background="#F0F7FF" BorderBrush="#0070F2" BorderThickness="1" CornerRadius="3" Padding="10,8" Margin="0,0,0,14">
+                        <StackPanel>
+                            <TextBlock Text="{Binding FactureSelectionnee.Numero}" FontWeight="SemiBold" FontSize="13"/>
+                            <TextBlock Text="{Binding FactureSelectionnee.Client.Nom}" Foreground="#6E6E6E" FontSize="12"/>
+                            <TextBlock Margin="0,4,0,0">
+                                <Run Text="TTC : " FontWeight="SemiBold"/>
+                                <Run Text="{Binding FactureSelectionnee.MontantTTC, StringFormat=C}"/>
+                            </TextBlock>
+                            <TextBlock>
+                                <Run Text="Solde : " FontWeight="SemiBold" Foreground="#BB0000"/>
+                                <Run Text="{Binding FactureSelectionnee.SoldeRestant, StringFormat=C}" Foreground="#BB0000"/>
+                            </TextBlock>
+                        </StackPanel>
+                    </Border>
+
+                    <TextBlock Text="Montant reçu ($) *" Style="{StaticResource FieldLabel}"/>
+                    <TextBox Text="{Binding MontantPaiement, UpdateSourceTrigger=PropertyChanged}" Height="28" Margin="0,0,0,10"/>
+
+                    <TextBlock Text="Mode de paiement" Style="{StaticResource FieldLabel}"/>
+                    <ComboBox ItemsSource="{Binding ModesPaiement}"
+                              SelectedItem="{Binding ModePaiement}"
+                              Height="28" Margin="0,0,0,10"/>
+
+                    <TextBlock Text="Référence / N° chèque" Style="{StaticResource FieldLabel}"/>
+                    <TextBox Text="{Binding ReferencePaiement, UpdateSourceTrigger=PropertyChanged}" Height="28" Margin="0,0,0,10"/>
+                </StackPanel>
+                <Border Grid.Row="2" Padding="16,10" BorderBrush="#E0E0E0" BorderThickness="0,1,0,0">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0" Content="✓ Confirmer"
+                                Command="{Binding EnregistrerPaiementCommand}"
+                                Style="{StaticResource SuccessBtn}" Margin="0,0,6,0" Height="30"/>
+                        <Button Grid.Column="1" Content="Annuler"
+                                Command="{Binding AnnulerPaiementCommand}"
+                                Style="{StaticResource SecondaryBtn}" Height="30"/>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

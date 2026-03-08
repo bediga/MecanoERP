@@ -1,0 +1,28 @@
+<UserControl x:Class="MecanoERP.WPF.Views.ComptabiliteView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="#F0F2F5">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" Background="White" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="20,12">
+            <StackPanel Orientation="Horizontal">
+                <Border Width="4" Height="22" Background="#0070F2" CornerRadius="2" Margin="0,0,10,0"/>
+                <TextBlock Text="Comptabilité" Style="{StaticResource PageTitle}"/>
+            </StackPanel>
+        </Border>
+
+        <Border Grid.Row="1" Margin="20,20,20,0" Background="White"
+                BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="3" Padding="20">
+            <StackPanel>
+                <TextBlock Text="Navigation comptabilité" FontFamily="Segoe UI Semibold" FontSize="14"
+                           Foreground="#1C1C1C" Margin="0,0,0,8"/>
+                <TextBlock Text="Accédez au Plan Comptable, aux Journaux et aux Rapports via le menu de navigation."
+                           Foreground="#6E6E6E" FontSize="13" TextWrapping="Wrap"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>
